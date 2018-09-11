@@ -25,30 +25,33 @@ echo Initialize git...
 
 # make project csproj file
 touch $projectName.Solution/$projectName/$projectName.csproj
-echo Make  new csproj file at $projectName.Solution/$projectName directory...
-echo '<Project Sdk="Microsoft.NET.Sdk">' >> $projectName.Solution/$projectName/$projectName.csproj
-echo '  <PropertyGroup>' >> $projectName.Solution/$projectName/$projectName.csproj
 dotnetVersion="$(dotnet --version)"
-echo '    <TargetFramework>netcoreapp'${dotnetVersion:0:3}'</TargetFramework>' >> $projectName.Solution/$projectName/$projectName.csproj
-echo '  </PropertyGroup>' >> $projectName.Solution/$projectName/$projectName.csproj
-echo '</Project>' >> $projectName.Solution/$projectName/$projectName.csproj
+cat >$projectName.Solution/$projectName/$projectName.csproj <<EOL
+<Project Sdk="Microsoft.NET.Sdk">
+  <PropertyGroup>
+    <TargetFramework>netcoreapp${dotnetVersion:0:5}</TargetFramework>
+  </PropertyGroup>
+</Project>
+EOL
 echo Initialize $projectName.Solution/$projectName/$projectName.csproj file...
 
 # make project test csproj file
 touch $projectName.Solution/$projectName.Tests/$projectName.Tests.csproj
-echo '<Project Sdk="Microsoft.NET.Sdk">' >> $projectName.Solution/$projectName.Tests/$projectName.Tests.csproj
-echo '  <PropertyGroup>' >> $projectName.Solution/$projectName.Tests/$projectName.Tests.csproj
-echo '    <TargetFramework>netcoreapp'${dotnetVersion:0:3}'</TargetFramework>' >> $projectName.Solution/$projectName.Tests/$projectName.Tests.csproj
-echo '  </PropertyGroup>' >> $projectName.Solution/$projectName.Tests/$projectName.Tests.csproj
-echo '  <ItemGroup>' >> $projectName.Solution/$projectName.Tests/$projectName.Tests.csproj
-echo '    <PackageReference Include="Microsoft.NET.Test.Sdk" Version="15.8.0" />' >> $projectName.Solution/$projectName.Tests/$projectName.Tests.csproj
-echo '    <PackageReference Include="MSTest.TestAdapter" Version="1.3.2" />' >> $projectName.Solution/$projectName.Tests/$projectName.Tests.csproj
-echo '    <PackageReference Include="MSTest.TestFramework" Version="1.3.2" />' >> $projectName.Solution/$projectName.Tests/$projectName.Tests.csproj
-echo '  </ItemGroup>' >> $projectName.Solution/$projectName.Tests/$projectName.Tests.csproj
-echo '  <ItemGroup>' >> $projectName.Solution/$projectName.Tests/$projectName.Tests.csproj
-echo '    <ProjectReference Include="..\'$projectName'\'$projectName'.csproj" />' >> $projectName.Solution/$projectName.Tests/$projectName.Tests.csproj
-echo '  </ItemGroup>' >> $projectName.Solution/$projectName.Tests/$projectName.Tests.csproj
-echo '</Project>' >> $projectName.Solution/$projectName.Tests/$projectName.Tests.csproj
+cat >$projectName.Solution/$projectName.Tests/$projectName.Tests.csproj <<EOL
+<Project Sdk="Microsoft.NET.Sdk">
+  <PropertyGroup>
+    <TargetFramework>netcoreapp${dotnetVersion:0:5}</TargetFramework>
+  </PropertyGroup>
+  <ItemGroup>
+    <PackageReference Include="Microsoft.NET.Test.Sdk" Version="15.8.0" />
+    <PackageReference Include="MSTest.TestAdapter" Version="1.3.2" />
+    <PackageReference Include="MSTest.TestFramework" Version="1.3.2" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\\${projectName}\\${projectName}.csproj" />
+  </ItemGroup>
+</Project>
+EOL
 echo Initialize $projectName.Solution/$projectName.Tests/$projectName.Tests.csproj file...
 
 # implement dotnet restore at test directory
