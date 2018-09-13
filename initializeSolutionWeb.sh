@@ -42,6 +42,7 @@ cat >$projectName.Solution/$projectName/$projectName.csproj <<EOL
     <PackageReference Include="Microsoft.AspNetCore" Version="1.1.2" />
     <PackageReference Include="Microsoft.AspNetCore.Http" Version="1.1.2" />
     <PackageReference Include="Microsoft.AspNetCore.Mvc" Version="1.1.3" />
+    <PackageReference Include="Microsoft.AspNetCore.StaticFiles" Version="1.1.3" />
   </ItemGroup>
 </Project>
 EOL
@@ -77,6 +78,8 @@ namespace ${projectName}
 
         public void Configure(IApplicationBuilder app)
         {
+            app.UseDeveloperExceptionPage();
+            app.UseStaticFiles();
             app.UseMvc(routes =>
             {
                 routes.MapRoute(
@@ -120,9 +123,44 @@ EOL
 echo making Program.cs...
 
 # make models directory
+mkdir $projectName.Solution/$projectName/Properties
+mkdir $projectName.Solution/$projectName/wwwroot
+mkdir $projectName.Solution/$projectName/wwwroot/css
+mkdir $projectName.Solution/$projectName/wwwroot/js
+mkdir $projectName.Solution/$projectName/wwwroot/img
 mkdir $projectName.Solution/$projectName/Models
 mkdir $projectName.Solution/$projectName/Views
 mkdir $projectName.Solution/$projectName/Views/Home
+touch $projectName.Solution/$projectName/Views/Home/Index.cshtml
+cat >$projectName.Solution/$projectName/Views/Home/Index.cshtml <<EOL
+@{
+  Layout = "_Layout";
+}
+EOL
+mkdir $projectName.Solution/$projectName/Views/Shared
+touch $projectName.Solution/$projectName/Views/Shared/_Layout.cshtml
+cat >$projectName.Solution/$projectName/Views/Shared/_Layout.cshtml <<EOL
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="utf-8">
+        <title>${projectName}</title>
+        <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
+        <link rel="stylesheet" href="/css/styles.css">
+    </head>
+    <body>
+        <!-- @Html.Partial("Header") -->
+        @RenderBody()
+        <!-- @Html.Partial("Footer") -->
+    </body>
+    <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js" integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN" crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js" integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q" crossorigin="anonymous"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js" integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl" crossorigin="anonymous"></script>
+</html>
+EOL
+touch $projectName.Solution/$projectName/Views/Shared/Header.cshtml
+touch $projectName.Solution/$projectName/Views/Shared/Footer.cshtml
+
 mkdir $projectName.Solution/$projectName/Controllers
 touch $projectName.Solution/$projectName/Controllers/HomeController.cs
 cat >$projectName.Solution/$projectName/Controllers/HomeController.cs <<EOL
@@ -136,6 +174,7 @@ namespace ${projectName}.Controllers
     }
 }
 EOL
+
 echo Make and initialize directories and files...
 
 # dotnet restore in main directory
