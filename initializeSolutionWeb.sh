@@ -10,7 +10,7 @@ if [ -d ${projectName}.Solution ]; then
 else
   # make solution directory
   mkdir $projectName.Solution
-  echo Make a new directory named $projectName.Solution... 
+  echo Make a new directory named $projectName.Solution...
 fi
 
 # make project directory and test directory
@@ -92,9 +92,24 @@ namespace ${projectName}
             });
         }
     }
+EOL
+
+# Choose DB Connection
+echo 'Do you want to connect DB? [y/n]'
+read -p 'Connect DB: ' connectDB
+
+# get a database name
+if [$connectDB = "y"] || [$connectDB = "Y"] then
+  read -p 'DB name: ' dbName
+  echo 'DB name is "'$dbName'"'
+  echo 'Initialize solution directory with DB...'
+else
+  echo 'Initialize solution directory without DB...'
+fi
+
     public static class DBConfiguration
     {
-        public static string ConnectionString = "server=localhost;user id=root;password=root;port=8889;database=todo;";
+        public static string ConnectionString = "server=localhost;user id=root;password=root;port=8889;database=${dbName};";
     }
 }
 EOL

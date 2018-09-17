@@ -27,7 +27,7 @@ read -p 'person1 last name: ' person1LastName
 read -p 'person1 email: ' person1Email
 read -p 'person2 first name: ' person2FirstName
 read -p 'person2 last name: ' person2LastName
-read -p 'person3 email: ' person2Email
+read -p 'person2 email: ' person2Email
 
 person1InitialFirst=${person1FirstName:0:1}
 person1InitialFirst=$(ToLower $person1InitialFirst)
