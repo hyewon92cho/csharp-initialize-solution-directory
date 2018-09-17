@@ -92,6 +92,10 @@ namespace ${projectName}
             });
         }
     }
+    public static class DBConfiguration
+    {
+        public static string ConnectionString = "server=localhost;user id=root;password=root;port=8889;database=todo;";
+    }
 }
 EOL
 echo making Startup.cs...
@@ -129,6 +133,24 @@ mkdir $projectName.Solution/$projectName/wwwroot/css
 mkdir $projectName.Solution/$projectName/wwwroot/js
 mkdir $projectName.Solution/$projectName/wwwroot/img
 mkdir $projectName.Solution/$projectName/Models
+touch $projectName.Solution/$projectName/Models/Database.cs
+cat >$projectName.Solution/$projectName/Models/Database.cs <<EOL
+using System;
+using MySql.Data.MySqlClient;
+using ${projectName};
+
+namespace ${projectName}.Models
+{
+    public class DB
+    {
+        public static MySqlConnection Connection()
+        {
+            MySqlConnection conn = new MySqlConnection(DBConfiguration.ConnectionString);
+            return conn;
+        }
+    }
+}
+EOL
 mkdir $projectName.Solution/$projectName/Views
 mkdir $projectName.Solution/$projectName/Views/Home
 touch $projectName.Solution/$projectName/Views/Home/Index.cshtml
@@ -176,6 +198,9 @@ namespace ${projectName}.Controllers
 EOL
 
 echo Make and initialize directories and files...
+
+# database connection
+dotnet add package MySqlConnector
 
 # dotnet restore in main directory
 dotnet restore $projectName.Solution/$projectName
