@@ -43,6 +43,7 @@ cat >$projectName.Solution/$projectName/$projectName.csproj <<EOL
     <PackageReference Include="Microsoft.AspNetCore.Http" Version="1.1.2" />
     <PackageReference Include="Microsoft.AspNetCore.Mvc" Version="1.1.3" />
     <PackageReference Include="Microsoft.AspNetCore.StaticFiles" Version="1.1.3" />
+    <PackageReference Include="MySqlConnector" Version="0.45.0" />
   </ItemGroup>
 </Project>
 EOL
@@ -99,20 +100,20 @@ echo 'Do you want to connect DB? [y/n]'
 read -p 'Connect DB: ' connectDB
 
 # get a database name
-if [$connectDB = "y"] || [$connectDB = "Y"] then
+if [$connectDB == "y"] || [$connectDB == "Y"] then
   read -p 'DB name: ' dbName
   echo 'DB name is "'$dbName'"'
   echo 'Initialize solution directory with DB...'
+  echo '    public static class DBConfiguration' >> $projectName.Solution/$projectName/Startup.cs
+  echo '    {' >> $projectName.Solution/$projectName/Startup.cs
+  echo '        public static string ConnectionString = "server=localhost;user id=root;password=root;port=8889;database=${dbName};";' >> $projectName.Solution/$projectName/Startup.cs
+  echo '    }' >> $projectName.Solution/$projectName/Startup.cs
+  echo '}' >> $projectName.Solution/$projectName/Startup.cs
 else
   echo 'Initialize solution directory without DB...'
+  echo '}' >> $projectName.Solution/$projectName/Startup.cs
 fi
 
-    public static class DBConfiguration
-    {
-        public static string ConnectionString = "server=localhost;user id=root;password=root;port=8889;database=${dbName};";
-    }
-}
-EOL
 echo making Startup.cs...
 
 # make Program.cs
@@ -213,9 +214,6 @@ namespace ${projectName}.Controllers
 EOL
 
 echo Make and initialize directories and files...
-
-# database connection
-dotnet add package MySqlConnector
 
 # dotnet restore in main directory
 dotnet restore $projectName.Solution/$projectName
